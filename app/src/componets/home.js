@@ -13,6 +13,12 @@ class Home extends Component {
     const shapes = [shape, ...this.state.shapes];
     this.setState({ shapes });
   };
+  updateShape = shape => {
+    const shapes = this.state.shapes.map(s =>
+      s.image === shape.image ? shape : s
+    );
+    this.setState({ shapes });
+  };
   render() {
     return (
       <div style={{ display: "flex" }}>
@@ -20,7 +26,11 @@ class Home extends Component {
           <Canvas shapes={this.state.shapes}></Canvas>
         </div>
         <div style={{ display: "flex" }}>
-          <Shapes shapes={this.state.shapes} addShape={this.addShape}></Shapes>
+          <Shapes
+            shapes={this.state.shapes}
+            addShape={this.addShape}
+            updateShape={this.updateShape}
+          ></Shapes>
         </div>
       </div>
     );

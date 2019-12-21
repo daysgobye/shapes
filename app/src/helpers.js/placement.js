@@ -6,6 +6,7 @@ export const placement = (shapes, width, height) => {
     };
   });
 };
+export const placeInZone = cap => randomInRange(100, cap - 100);
 
 export const randomInRange = (min, max) =>
   Math.floor(Math.random() * (max - min + 1) + min);

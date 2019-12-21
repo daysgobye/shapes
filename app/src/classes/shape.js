@@ -1,10 +1,12 @@
 class shape {
-  constructor(image) {
+  constructor(image, imgName) {
     this.image = image;
+    this.imageName = imgName;
     this.pos = { x: 1, y: 1 };
     this.color = "#fffff";
     this.minSize = 1;
     this.maxSize = 1;
+    this.numToRender = 1;
   }
   toObj = () => {
     return {
@@ -17,6 +19,14 @@ class shape {
   };
   setPos = pos => {
     this.pos = pos;
+  };
+  upDateNum = num => {
+    this.numToRender = Number(num);
+    return this;
+  };
+  upDateMinSize = num => {
+    this.minSize = Number(num);
+    return this;
   };
 }
 export default shape;

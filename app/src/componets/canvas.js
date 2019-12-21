@@ -5,11 +5,11 @@ import icon from "../ic.svg";
 import Konva from "konva";
 import { Stage, Layer, Image, Rect } from "react-konva";
 import SvgRender from "./svgRender";
-import { placement } from "../helpers.js/placement";
+import { placement, placeInZone } from "../helpers.js/placement";
 class Canvas extends Component {
   constructor(props) {
     super(props);
-    this.state = { shapes: [] };
+    this.state = { shapes: [], sideBar: 600 };
     this.stageRef = React.createRef();
   }
   posAllShapes = () => {
@@ -22,12 +22,12 @@ class Canvas extends Component {
         )
       },
       () => {
-        this.saveFile();
-        this.saveImage();
+        // this.saveFile();
+        // this.saveImage();
       }
     );
   };
-
+  savedRender = [];
   textFile = null;
 
   makeTextFile = text => {
@@ -46,23 +46,27 @@ class Canvas extends Component {
   };
 
   saveFile = () => {
-    var create = document.getElementById("create");
-    create.addEventListener(
-      "click",
-      function() {
-        var link = document.createElement("a");
-        link.setAttribute("download", "shapes.txt");
-        link.href = this.makeTextFile(JSON.stringify(this.state.shapes));
-        document.body.appendChild(link);
+    // var create = document.getElementById("create");
+    // create.addEventListener(
+    //   "click",
+    //   function() {
+    //     var link = document.createElement("a");
+    //     link.setAttribute("download", "shapes.txt");
+    //     link.href = this.makeTextFile(JSON.stringify(this.state.shapes));
+    //     document.body.appendChild(link);
 
-        // wait for the link to be added to the document
-        window.requestAnimationFrame(function() {
-          var event = new MouseEvent("click");
-          link.dispatchEvent(event);
-          document.body.removeChild(link);
-        });
-      },
-      false
+    //     // wait for the link to be added to the document
+    //     window.requestAnimationFrame(function() {
+    //       var event = new MouseEvent("click");
+    //       link.dispatchEvent(event);
+    //       document.body.removeChild(link);
+    //     });
+    //   },
+    //   false
+    // );
+    this.downloadURI(
+      this.makeTextFile(JSON.stringify(this.savedRender)),
+      "shapes.json"
     );
   };
   downloadURI = (uri, name) => {
@@ -80,38 +84,57 @@ class Canvas extends Component {
     this.downloadURI(dataURL, "stage.png");
   };
 
+  renderArrayOfShapes = shape => {
+    let array = [];
+    let loopShape = [];
+    for (let i = 0; i < shape.numToRender; i++) {
+      let x = placeInZone(window.innerWidth - this.state.sideBar);
+      let y = placeInZone(window.innerHeight);
+      array.push(
+        <SvgRender src={shape.image} x={x} y={y} scale={shape.minSize} />
+      );
+      loopShape.push({ ...shape, pos: { x, y } });
+    }
+    this.savedRender.push(loopShape);
+    return array;
+  };
+
+  shapeRender = () => {
+    const render = this.state.shapes.map(shape => {
+      return this.renderArrayOfShapes(shape);
+    });
+    // this.savedRender = render;
+    return render;
+  };
+
   render() {
     return (
       <>
         <Stage
           ref={this.stageRef}
-          width={window.innerWidth - 200}
+          width={window.innerWidth - this.state.sideBar}
           height={window.innerHeight}
         >
           <Layer>
             <Rect
               x={0}
               y={0}
-              width={window.innerWidth - 200}
+              width={window.innerWidth - this.state.sideBar}
               height={window.innerHeight}
-              fill="blue"
+              fill="white"
             />
           </Layer>
           <Layer>
-            {this.state.shapes.map(shape => {
-              return (
-                <SvgRender
-                  src={shape.image}
-                  x={shape.pos.x}
-                  y={shape.pos.y}
-                  scale={shape.minSize}
-                />
-              );
-            })}
+            {this.shapeRender()}
             {/* <SvgRender src={icon} x={300} y={800} scale={8} /> */}
           </Layer>
         </Stage>
-        <button onClick={this.posAllShapes}>mix</button>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <button onClick={this.posAllShapes}>mix</button>
+          <button onClick={this.saveImage}>Save Image</button>
+          <button onClick={this.saveFile}>Save set</button>
+        </div>
+
         <div id="create"></div>
       </>
     );
