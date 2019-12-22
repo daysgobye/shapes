@@ -43,6 +43,8 @@ class SvgRender extends Component {
         scaleX={this.props.scale}
         scaleY={this.props.scale}
         image={this.state.image}
+        width={100}
+        height={100}
         ref={node => {
           this.imageNode = node;
         }}

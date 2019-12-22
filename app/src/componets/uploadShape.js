@@ -12,7 +12,7 @@ class UploadShape extends Component {
       URL.createObjectURL(e.target.files[0]),
       e.target.files[0].name
     );
-    console.log(shape, "file", e.target.files[0].name);
+    console.log(shape, "file", e.target.files[0]);
 
     this.props.addShape(shape);
   };

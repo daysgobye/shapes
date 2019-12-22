@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Canvg from "canvg";
-import logo from "./logo.svg";
-import icon from "../ic.svg";
+// import logo from "./logo.svg";
+// import icon from "../ic.svg";
 import Konva from "konva";
 import { Stage, Layer, Image, Rect } from "react-konva";
 import SvgRender from "./svgRender";
