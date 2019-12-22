@@ -5,7 +5,11 @@ import Canvg from "canvg";
 import Konva from "konva";
 import { Stage, Layer, Image, Rect } from "react-konva";
 import SvgRender from "./svgRender";
-import { placement, placeInZone } from "../helpers.js/placement";
+import {
+  placement,
+  placeInZone,
+  placementInter
+} from "../helpers.js/placement";
 class Canvas extends Component {
   constructor(props) {
     super(props);
@@ -88,12 +92,18 @@ class Canvas extends Component {
     let array = [];
     let loopShape = [];
     for (let i = 0; i < shape.numToRender; i++) {
-      let x = placeInZone(window.innerWidth - this.state.sideBar);
-      let y = placeInZone(window.innerHeight);
+      //   let x = placeInZone(window.innerWidth - this.state.sideBar);
+      //   let y = placeInZone(window.innerHeight);
+      let pos = placementInter(window, [...this.savedRender, ...loopShape]);
       array.push(
-        <SvgRender src={shape.image} x={x} y={y} scale={shape.minSize} />
+        <SvgRender
+          src={shape.image}
+          x={pos.x}
+          y={pos.y}
+          scale={shape.minSize}
+        />
       );
-      loopShape.push({ ...shape, pos: { x, y } });
+      loopShape.push({ ...shape, pos });
     }
     this.savedRender.push(loopShape);
     return array;
