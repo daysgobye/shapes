@@ -17,6 +17,7 @@ class Canvas extends Component {
     this.stageRef = React.createRef();
   }
   posAllShapes = () => {
+    this.savedRender = [];
     this.setState(
       {
         shapes: placement(
@@ -91,19 +92,40 @@ class Canvas extends Component {
   renderArrayOfShapes = shape => {
     let array = [];
     let loopShape = [];
-    for (let i = 0; i < shape.numToRender; i++) {
-      //   let x = placeInZone(window.innerWidth - this.state.sideBar);
-      //   let y = placeInZone(window.innerHeight);
-      let pos = placementInter(window, [...this.savedRender, ...loopShape]);
-      array.push(
-        <SvgRender
-          src={shape.image}
-          x={pos.x}
-          y={pos.y}
-          scale={shape.minSize}
-        />
-      );
-      loopShape.push({ ...shape, pos });
+    let count = 0;
+    while (array.length < shape.numToRender || count < 1000) {
+      let x = placeInZone(window.innerWidth - this.state.sideBar);
+      let y = placeInZone(window.innerHeight);
+      let noIn = true;
+      // let pos=placementInter( window,[...this.savedRender,...loopShape] )
+      let otherBodys = [...loopShape, ...this.savedRender];
+      for (let i = 0; i < otherBodys.flat().length; i++) {
+        const pos = otherBodys.flat()[i];
+        if (
+          pos.pos &&
+          x > pos.pos.x - 100 &&
+          x < pos.pos.x + 100 &&
+          y > pos.pos.y - 100 &&
+          y < pos.pos.y + 100
+        ) {
+          console.log("overlap");
+          noIn = false;
+          count++;
+        }
+        // console.log(pos.pos, "pos");
+      }
+      if (noIn) {
+        array.push(
+          <SvgRender
+            key={y}
+            src={shape.image}
+            x={x}
+            y={y}
+            scale={shape.minSize}
+          />
+        );
+        loopShape.push({ ...shape, pos: { x, y } });
+      }
     }
     this.savedRender.push(loopShape);
     return array;

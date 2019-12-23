@@ -38,6 +38,7 @@ class SvgRender extends Component {
   render() {
     return (
       <Image
+        key={this.props.key}
         x={this.props.x}
         y={this.props.y}
         scaleX={this.props.scale}
