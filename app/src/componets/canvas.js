@@ -20,11 +20,7 @@ class Canvas extends Component {
     this.savedRender = [];
     this.setState(
       {
-        shapes: placement(
-          this.props.shapes,
-          window.innerWidth,
-          window.innerHeight
-        )
+        shapes: this.props.shapes
       },
       () => {
         // this.saveFile();
@@ -93,7 +89,9 @@ class Canvas extends Component {
     let array = [];
     let loopShape = [];
     let count = 0;
-    while (array.length < shape.numToRender || count < 1000) {
+    console.log(shape, "I need this shape flag");
+
+    while (loopShape.length < shape.numToRender && count < 1000) {
       let x = placeInZone(window.innerWidth - this.state.sideBar);
       let y = placeInZone(window.innerHeight);
       let noIn = true;
@@ -117,7 +115,7 @@ class Canvas extends Component {
       if (noIn) {
         array.push(
           <SvgRender
-            key={y}
+            key={`img${array.length * y * x}`}
             src={shape.image}
             x={x}
             y={y}
