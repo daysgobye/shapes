@@ -95,6 +95,7 @@ class Canvas extends Component {
       let x = placeInZone(window.innerWidth - this.state.sideBar);
       let y = placeInZone(window.innerHeight);
       let noIn = true;
+      const overlap = 100 * shape.scale;
       // let pos=placementInter( window,[...this.savedRender,...loopShape] )
       let otherBodys = [...loopShape, ...this.savedRender];
       for (let i = 0; i < otherBodys.flat().length; i++) {

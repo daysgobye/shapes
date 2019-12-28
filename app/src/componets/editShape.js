@@ -32,7 +32,7 @@ class EditShape extends Component {
             value={shape.numToRender}
           />
         </label>
-        <label>
+        {/* <label>
           scale:
           <input
             ref={this.scaleRef}
@@ -40,7 +40,7 @@ class EditShape extends Component {
             type="text"
             value={shape.minSize}
           />
-        </label>
+        </label> */}
         <img src={shape.image} width={100} height={100} alt="" />
       </div>
     );

@@ -14,7 +14,6 @@ class Notes extends Component {
           right now),
           <br /> replay from saved files, some svgs are broken, exporting svg
         </p>
-        <p>so I hope what is done is still fun for you </p>
       </div>
     );
   }
