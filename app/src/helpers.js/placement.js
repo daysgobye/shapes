@@ -6,7 +6,10 @@ export const placement = (shapes, width, height) => {
     };
   });
 };
-export const placeInZone = cap => randomInRange(10, cap - 100);
+export const placeInZone = (cap, shape) => {
+  const shapeWidth = 100 * shape.minSize;
+  return randomInRange(10, cap - shapeWidth);
+};
 
 export const randomInRange = (min, max) =>
   Math.floor(Math.random() * (max - min + 1) + min);
@@ -41,4 +44,14 @@ export const placementInter = (cap, otherBodys, count = 1) => {
   console.log(newPos.x);
 
   return newPos;
+};
+
+export const checkOverLap = (y, x, pos, shape) => {
+  const shapeWidth = 100 * shape.minSize;
+  return (
+    x > pos.pos.x - shapeWidth &&
+    x < pos.pos.x + shapeWidth &&
+    y > pos.pos.y - shapeWidth &&
+    y < pos.pos.y + shapeWidth
+  );
 };

@@ -8,7 +8,8 @@ import SvgRender from "./svgRender";
 import {
   placement,
   placeInZone,
-  placementInter
+  placementInter,
+  checkOverLap
 } from "../helpers.js/placement";
 class Canvas extends Component {
   constructor(props) {
@@ -18,15 +19,9 @@ class Canvas extends Component {
   }
   posAllShapes = () => {
     this.savedRender = [];
-    this.setState(
-      {
-        shapes: this.props.shapes
-      },
-      () => {
-        // this.saveFile();
-        // this.saveImage();
-      }
-    );
+    this.setState({
+      shapes: this.props.shapes
+    });
   };
   savedRender = [];
   textFile = null;
@@ -39,32 +34,12 @@ class Canvas extends Component {
     if (this.textFile !== null) {
       window.URL.revokeObjectURL(this.textFile);
     }
-
     this.textFile = window.URL.createObjectURL(data);
-
     // returns a URL you can use as a href
     return this.textFile;
   };
 
   saveFile = () => {
-    // var create = document.getElementById("create");
-    // create.addEventListener(
-    //   "click",
-    //   function() {
-    //     var link = document.createElement("a");
-    //     link.setAttribute("download", "shapes.txt");
-    //     link.href = this.makeTextFile(JSON.stringify(this.state.shapes));
-    //     document.body.appendChild(link);
-
-    //     // wait for the link to be added to the document
-    //     window.requestAnimationFrame(function() {
-    //       var event = new MouseEvent("click");
-    //       link.dispatchEvent(event);
-    //       document.body.removeChild(link);
-    //     });
-    //   },
-    //   false
-    // );
     this.downloadURI(
       this.makeTextFile(JSON.stringify(this.savedRender)),
       "shapes.json"
@@ -92,26 +67,19 @@ class Canvas extends Component {
     console.log(shape, "I need this shape flag");
 
     while (loopShape.length < shape.numToRender && count < 1000) {
-      let x = placeInZone(window.innerWidth - this.state.sideBar);
-      let y = placeInZone(window.innerHeight);
+      let x = placeInZone(window.innerWidth - this.state.sideBar, shape);
+      let y = placeInZone(window.innerHeight, shape);
       let noIn = true;
       const overlap = 100 * shape.scale;
       // let pos=placementInter( window,[...this.savedRender,...loopShape] )
       let otherBodys = [...loopShape, ...this.savedRender];
       for (let i = 0; i < otherBodys.flat().length; i++) {
         const pos = otherBodys.flat()[i];
-        if (
-          pos.pos &&
-          x > pos.pos.x - 100 &&
-          x < pos.pos.x + 100 &&
-          y > pos.pos.y - 100 &&
-          y < pos.pos.y + 100
-        ) {
+        if (pos.pos && checkOverLap(y, x, pos, shape)) {
           console.log("overlap");
           noIn = false;
           count++;
         }
-        // console.log(pos.pos, "pos");
       }
       if (noIn) {
         array.push(
