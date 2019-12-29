@@ -1,10 +1,12 @@
 import React, { Component } from "react";
+import { Button } from "reactstrap";
 import Canvg from "canvg";
 // import logo from "./logo.svg";
 // import icon from "../ic.svg";
 import Konva from "konva";
 import { Stage, Layer, Image, Rect } from "react-konva";
 import SvgRender from "./svgRender";
+import DlButton from "./dlButton";
 import {
   placement,
   placeInZone,
@@ -14,7 +16,7 @@ import {
 class Canvas extends Component {
   constructor(props) {
     super(props);
-    this.state = { shapes: [], sideBar: 600 };
+    this.state = { shapes: [], sideBar: 210 };
     this.stageRef = React.createRef();
   }
   posAllShapes = () => {
@@ -24,42 +26,6 @@ class Canvas extends Component {
     });
   };
   savedRender = [];
-  textFile = null;
-
-  makeTextFile = text => {
-    var data = new Blob([text], { type: "text/plain" });
-
-    // If we are replacing a previously generated file we need to
-    // manually revoke the object URL to avoid memory leaks.
-    if (this.textFile !== null) {
-      window.URL.revokeObjectURL(this.textFile);
-    }
-    this.textFile = window.URL.createObjectURL(data);
-    // returns a URL you can use as a href
-    return this.textFile;
-  };
-
-  saveFile = () => {
-    this.downloadURI(
-      this.makeTextFile(JSON.stringify(this.savedRender)),
-      "shapes.json"
-    );
-  };
-  downloadURI = (uri, name) => {
-    var link = document.createElement("a");
-    link.download = name;
-    link.href = uri;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-  saveImage = () => {
-    const dataURL = this.stageRef.current
-      .getStage()
-      .toDataURL({ pixelRatio: 3 });
-    this.downloadURI(dataURL, "stage.png");
-  };
-
   renderArrayOfShapes = shape => {
     let array = [];
     let loopShape = [];
@@ -129,12 +95,19 @@ class Canvas extends Component {
           </Layer>
         </Stage>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <button onClick={this.posAllShapes}>mix</button>
-          <button onClick={this.saveImage}>Save Image</button>
-          <button onClick={this.saveFile}>Save set</button>
+          <DlButton
+            stageRef={this.stageRef}
+            savedRender={this.savedRender}
+          ></DlButton>
+          <Button
+            color="danger"
+            className="m-1"
+            size="sm"
+            onClick={this.posAllShapes}
+          >
+            mix
+          </Button>
         </div>
-
-        <div id="create"></div>
       </>
     );
   }

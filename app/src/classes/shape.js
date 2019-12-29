@@ -21,11 +21,11 @@ class shape {
     this.pos = pos;
   };
   upDateNum = num => {
-    this.numToRender = Number(num);
+    this.numToRender = num;
     return this;
   };
   upDateMinSize = num => {
-    this.minSize = Number(num);
+    this.minSize = num;
     return this;
   };
 }

@@ -20,7 +20,6 @@ class UploadShape extends Component {
     return (
       <div>
         <input type="file" name="" id="" onChange={e => this.makeShape(e)} />
-        <button onClick={this.makeShape}>go </button>
       </div>
     );
   }
